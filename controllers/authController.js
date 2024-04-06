@@ -1,66 +1,8 @@
-// const User = require('../models/User');
-// const bcrypt = require('bcrypt');
-// const passport = require('passport');
-
-// exports.register = async (req, res, next) => {
-// 	try {
-// 		const hashedPassword = await bcrypt.hash(req.body.password, 10);
-// 		const newUser = new User({
-// 			name: req.body.name,
-// 			email: req.body.email,
-// 			password: hashedPassword,
-// 			bio: req.body.bio,
-// 			profileImage: req.body.profileImage,
-// 			phoneNumber: req.body.phoneNumber,
-// 			address: req.body.address,
-// 			isPublic: req.body.isPublic,
-// 		});
-// 		await newUser.save();
-// 		res.status(201).json({ message: 'User registered successfully' });
-// 	} catch (err) {
-// 		next(err);
-// 	}
-// };
-
-// exports.login = (req, res, next) => {
-// 	passport.authenticate('local', {
-// 		successRedirect: '/',
-// 		failureRedirect: '/login',
-// 	})(req, res, next);
-// };
-
-// exports.logout = (req, res, next) => {
-// 	req.logout();
-// 	res.redirect('/');
-// };
-
-// exports.updateProfile = async (req, res, next) => {
-// 	try {
-// 		const updatedUser = await User.findByIdAndUpdate(
-// 			req.user.id,
-// 			{
-// 				name: req.body.name,
-// 				email: req.body.email,
-// 				bio: req.body.bio,
-// 				profileImage: req.body.profileImage,
-// 				phoneNumber: req.body.phoneNumber,
-// 				address: req.body.address,
-// 				isPublic: req.body.isPublic,
-// 			},
-// 			{ new: true }
-// 		);
-// 		res.json(updatedUser);
-// 	} catch (err) {
-// 		next(err);
-// 	}
-// };
-
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-exports.register = async (req, res) => {
+const register = async (req, res) => {
 	try {
 		const { name, email, password, bio, phone, profileImage } = req.body;
 		const user = await User.findOne({ email });
@@ -84,7 +26,7 @@ exports.register = async (req, res) => {
 	}
 };
 
-exports.login = async (req, res) => {
+const login = async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		const user = await User.findOne({ email });
@@ -103,7 +45,7 @@ exports.login = async (req, res) => {
 	}
 };
 
-exports.logout = async (req, res) => {
+const logout = async (req, res) => {
 	try {
 		// Perform logout actions if any
 		res.json({ message: 'Logged out successfully' });
@@ -112,3 +54,11 @@ exports.logout = async (req, res) => {
 		res.status(500).json({ message: 'Internal server error' });
 	}
 };
+
+
+module.exports = {
+	register,
+	login,
+	logout
+};
+

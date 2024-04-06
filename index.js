@@ -1,28 +1,16 @@
-// index.js
-
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const authRoutes = require('./routes/authRoutes');
-const profileRoutes = require('./routes/profileRoutes');
-
+const express = require('express')
 const app = express();
+const dotenv = require('dotenv')
+dotenv.config();
+const PORT = process.env.PORT || 8080
+const connectDB = require('./config/db')
 
-// Middleware
-app.use(bodyParser.json());
+app.use(express.json());
+connectDB();
+app.use('/api/auth', require('./routes/authRoutes'))
+app.use('/api/profiles', require('./routes/profileRoutes'))
 
-// Routes
-app.use('/auth', authRoutes);
-app.use('/profile', profileRoutes);
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-	console.error('Error:', err.stack);
-	res.status(500).json({ message: 'Internal server error' });
-});
-
-// Start server
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-	console.log(`Server is running on port ${PORT}`);
-});
+	console.log(`Server is running on port ${PORT}`)
+
+})
